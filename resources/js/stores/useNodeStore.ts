@@ -24,20 +24,21 @@ export const useNodeStore = defineStore('nodeStore', {
                         workspaceContainers = parsedContainers;
 
                         // Identify nodes already used in the workspace to remove them from sidebar
-                        const usedNodeIds = new Set<string>();
+                        const usedDataFields = new Set<string>();
                         workspaceContainers.forEach((container) => {
                             container.nodes.forEach((node) => {
-                                // We check 'dataField' or 'id'.
-                                // Standard nodes moved (not cloned) retain their original ID.
-                                // We need to exclude them from availableNodes.
-                                usedNodeIds.add(node.id);
+                                // We check 'dataField' to prevent original fields from showing up
+                                // even if they were cloned with a new UUID.
+                                if (node.dataField !== 'spacer') {
+                                    usedDataFields.add(node.dataField);
+                                }
                             });
                         });
 
                         availableNodes = allNodes.filter(
                             (node) =>
                                 node.id === 'spacer' ||
-                                !usedNodeIds.has(node.id),
+                                !usedDataFields.has(node.dataField),
                         );
                     }
                 } catch (e) {
@@ -97,10 +98,16 @@ export const useNodeStore = defineStore('nodeStore', {
 
                 if (container) {
                     // Rescue standard nodes (non-spacers) and return them to the sidebar
-                    const nodesToReturn = container.nodes.filter(
-                        (n) => n.label !== '[ || ]',
-                    );
-                    this.availableNodes.push(...nodesToReturn);
+                    container.nodes.forEach((node) => {
+                        if (node.dataField !== 'spacer') {
+                            const alreadyInSidebar = this.availableNodes.some(
+                                (n) => n.dataField === node.dataField,
+                            );
+                            if (!alreadyInSidebar) {
+                                this.availableNodes.push(node);
+                            }
+                        }
+                    });
 
                     // Remove the container
                     this.workspaceContainers.splice(containerIndex, 1);
