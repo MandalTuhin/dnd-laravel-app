@@ -1,0 +1,87 @@
+{
+  "name": {
+    "editorType": "dxTextBox",
+    "label": "Name"
+  },
+  "description": {
+    "editorType": "dxTextArea",
+    "label": "Description"
+  },
+  "industry": {
+    "editorType": "dxSelectBox",
+    "label": "Industry"
+  },
+  "annual_revenue": {
+    "editorType": "dxTextBox",
+    "label": "Annual Revenue"
+  },
+  "website": {
+    "editorType": "dxTextBox",
+    "label": "Website"
+  },
+  "no_of_employees": {
+    "editorType": "dxSelectBox",
+    "label": "No Of Employees"
+  },
+  "email": {
+    "editorType": "dxTextBox",
+    "label": "Email"
+  },
+  "entity_type": {
+    "editorType": "dxSelectBox",
+    "label": "Entity Type"
+  },
+  "nature_of_business": {
+    "editorType": "dxSelectBox",
+    "label": "Nature Of Business"
+  },
+  "old_id": {
+    "editorType": "dxTextBox",
+    "label": "Old Id"
+  },
+  "compliance_type": {
+    "editorType": "MultiSelect",
+    "label": "Compliance Type"
+  },
+  "business_activity": {
+    "editorType": "dxSelectBox",
+    "label": "Business Activity"
+  },
+  "primary_product": {
+    "editorType": "dxTextBox",
+    "label": "Primary Product"
+  },
+  "role_type": {
+    "editorType": "dxSelectBox",
+    "label": "Role Type"
+  },
+  "phone_number": {
+    "editorType": "Phone",
+    "label": "Phone Number"
+  },
+  "pan_no": {
+    "editorType": "dxTextBox",
+    "label": "PAN"
+  },
+  "tan_no": {
+    "editorType": "dxTextBox",
+    "label": "TAN"
+  },
+  "cin": {
+    "editorType": "dxTextBox",
+    "label": "CIN"
+  },
+  "account_type": {
+    "editorType": "dxSelectBox",
+    "label": "Account Type"
+  },
+  "InventoryDetail_LineItem": {
+    "editorType": "LineItemField",
+    "label": "Test Line Item"
+  },
+  "Address_LineItem": {
+    "editorType": "LineItemField",
+    "label": "Address Test Line Item"
+  }
+}
+
