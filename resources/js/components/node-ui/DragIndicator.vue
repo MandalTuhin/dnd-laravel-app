@@ -1,14 +1,14 @@
 <script setup lang="ts">
 defineProps<{
-  index: number | null;
-  side: 'top' | 'bottom';
+    index: number | null;
+    side: 'top' | 'bottom';
 }>();
 </script>
 
 <template>
-  <div
-    v-if="index !== null"
-    class="absolute left-0 right-0 h-1 bg-yellow-500 z-50 rounded-full"
-    :class="[side === 'top' ? '-top-2' : '-bottom-2']"
-  ></div>
+    <div
+        v-if="index !== null"
+        class="absolute right-0 left-0 z-50 h-1 rounded-full bg-yellow-500"
+        :class="[side === 'top' ? '-top-2' : '-bottom-2']"
+    ></div>
 </template>

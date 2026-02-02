@@ -1,243 +1,243 @@
 {
-  "name": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "name": "name",
-    "vname": "LBL_NAME",
-    "label": "Name",
-    "required": "1",
-    "format": "Title Case",
-    "status": "deployed",
-    "unique": "1"
-  },
-  "description": {
-    "editorOptions": {
-      "precision": "2"
+    "name": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "name": "name",
+        "vname": "LBL_NAME",
+        "label": "Name",
+        "required": "1",
+        "format": "Title Case",
+        "status": "deployed",
+        "unique": "1"
     },
-    "validationRules": [],
-    "editorType": "dxTextArea",
-    "name": "description",
-    "vname": "LBL_DESCRIPTION",
-    "label": "Description"
-  },
-  "industry": {
-    "editorOptions": {
-      "precision": "2"
+    "description": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxTextArea",
+        "name": "description",
+        "vname": "LBL_DESCRIPTION",
+        "label": "Description"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "options": "industry_options",
-    "name": "industry",
-    "vname": "LBL_INDUSTRY",
-    "label": "Industry"
-  },
-  "annual_revenue": {
-    "editorOptions": {
-      "precision": "2"
+    "industry": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "options": "industry_options",
+        "name": "industry",
+        "vname": "LBL_INDUSTRY",
+        "label": "Industry"
     },
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "name": "annual_revenue",
-    "vname": "LBL_ANNUAL_REVENUE",
-    "label": "Annual Revenue"
-  },
-  "website": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "name": "website",
-    "vname": "LBL_WEBSITE",
-    "label": "Website",
-    "status": "deployed",
-    "required": "",
-    "unique": ""
-  },
-  "no_of_employees": {
-    "editorOptions": {
-      "precision": "2"
+    "annual_revenue": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "name": "annual_revenue",
+        "vname": "LBL_ANNUAL_REVENUE",
+        "label": "Annual Revenue"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "options": "no_of_employees_options",
-    "name": "no_of_employees",
-    "vname": "LBL_NO_OF_EMPLOYEES",
-    "label": "No Of Employees"
-  },
-  "email": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "name": "email",
-    "vname": "LBL_EMAIL",
-    "label": "Email",
-    "status": "deployed",
-    "required": "0"
-  },
-  "entity_type": {
-    "editorOptions": {
-      "precision": "2"
+    "website": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "name": "website",
+        "vname": "LBL_WEBSITE",
+        "label": "Website",
+        "status": "deployed",
+        "required": "",
+        "unique": ""
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "options": "entity_type_options",
-    "name": "entity_type",
-    "vname": "LBL_ENTITY_TYPE",
-    "label": "Entity Type"
-  },
-  "nature_of_business": {
-    "editorOptions": {
-      "precision": "2"
+    "no_of_employees": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "options": "no_of_employees_options",
+        "name": "no_of_employees",
+        "vname": "LBL_NO_OF_EMPLOYEES",
+        "label": "No Of Employees"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "options": "nature_of_business_options",
-    "name": "nature_of_business",
-    "vname": "LBL_NATURE_OF_BUSINESS",
-    "label": "Nature Of Business"
-  },
-  "old_id": {
-    "editorOptions": {
-      "precision": "2"
+    "email": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "name": "email",
+        "vname": "LBL_EMAIL",
+        "label": "Email",
+        "status": "deployed",
+        "required": "0"
     },
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "name": "old_id",
-    "vname": "LBL_OLD_ID",
-    "label": "Old Id"
-  },
-  "compliance_type": {
-    "editorOptions": {
-      "precision": "2"
+    "entity_type": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "options": "entity_type_options",
+        "name": "entity_type",
+        "vname": "LBL_ENTITY_TYPE",
+        "label": "Entity Type"
     },
-    "validationRules": [],
-    "editorType": "MultiSelect",
-    "format": "",
-    "name": "compliance_type",
-    "vname": "LBL_COMPLIANCE_TYPE",
-    "label": "Compliance Type",
-    "options": "sparsh_stat_app_options"
-  },
-  "business_activity": {
-    "editorOptions": {
-      "precision": "2"
+    "nature_of_business": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "options": "nature_of_business_options",
+        "name": "nature_of_business",
+        "vname": "LBL_NATURE_OF_BUSINESS",
+        "label": "Nature Of Business"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "format": "",
-    "name": "business_activity",
-    "vname": "LBL_BUSINESS_ACTIVITY",
-    "label": "Business Activity",
-    "options": "accounts_business_activity_options"
-  },
-  "primary_product": {
-    "editorOptions": {
-      "precision": "2"
+    "old_id": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "name": "old_id",
+        "vname": "LBL_OLD_ID",
+        "label": "Old Id"
     },
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "format": "",
-    "name": "primary_product",
-    "vname": "LBL_PRIMARY_PRODUCT",
-    "label": "Primary Product"
-  },
-  "role_type": {
-    "editorOptions": {
-      "precision": "2"
+    "compliance_type": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "MultiSelect",
+        "format": "",
+        "name": "compliance_type",
+        "vname": "LBL_COMPLIANCE_TYPE",
+        "label": "Compliance Type",
+        "options": "sparsh_stat_app_options"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "format": "",
-    "name": "role_type",
-    "vname": "LBL_ROLE_TYPE",
-    "label": "Role Type",
-    "options": "accounts_role_type"
-  },
-  "phone_number": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "Phone",
-    "format": "",
-    "name": "phone_number",
-    "vname": "LBL_PHONE_NUMBER",
-    "label": "Phone Number",
-    "status": "deployed",
-    "required": "0"
-  },
-  "phone_number_1": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "Phone",
-    "format": "",
-    "name": "phone_number_1",
-    "vname": "LBL_PHONE_NUMBER_1",
-    "label": "Phone Number"
-  },
-  "pan_no": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "format": "",
-    "name": "pan_no",
-    "vname": "LBL_PAN_NO",
-    "label": "PAN"
-  },
-  "tan_no": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "format": "",
-    "name": "tan_no",
-    "vname": "LBL_TAN_NO",
-    "label": "TAN"
-  },
-  "cin": {
-    "editorOptions": {
-      "precision": "2"
+    "business_activity": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "format": "",
+        "name": "business_activity",
+        "vname": "LBL_BUSINESS_ACTIVITY",
+        "label": "Business Activity",
+        "options": "accounts_business_activity_options"
     },
-    "validationRules": [],
-    "editorType": "dxTextBox",
-    "format": "",
-    "name": "cin",
-    "vname": "LBL_CIN",
-    "label": "CIN"
-  },
-  "account_type": {
-    "editorOptions": {
-      "precision": "2"
+    "primary_product": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "format": "",
+        "name": "primary_product",
+        "vname": "LBL_PRIMARY_PRODUCT",
+        "label": "Primary Product"
     },
-    "validationRules": [],
-    "editorType": "dxSelectBox",
-    "format": "",
-    "name": "account_type",
-    "vname": "LBL_ACCOUNT_TYPE",
-    "label": "Account Type",
-    "options": "account_type_new_options"
-  },
-  "InventoryDetail_LineItem": {
-    "editorOptions": {
-      "precision": "2"
+    "role_type": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "format": "",
+        "name": "role_type",
+        "vname": "LBL_ROLE_TYPE",
+        "label": "Role Type",
+        "options": "accounts_role_type"
     },
-    "validationRules": [],
-    "editorType": "LineItemField",
-    "format": "",
-    "label": "Test Line Item",
-    "rmodule1": "InventoryDetail",
-    "name": "InventoryDetail_LineItem",
-    "relate_name": "rlt_account_inventorydetail",
-    "source": "non-db"
-  },
-  "Address_LineItem": {
-    "editorOptions": [],
-    "validationRules": [],
-    "editorType": "LineItemField",
-    "format": "",
-    "label": "Address Test Line Item",
-    "rmodule1": "Address",
-    "name": "Address_LineItem",
-    "relate_name": "rlt_account_address",
-    "source": "non-db",
-    "status": "deployed",
-    "lineItemType": "Address"
-  }
+    "phone_number": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "Phone",
+        "format": "",
+        "name": "phone_number",
+        "vname": "LBL_PHONE_NUMBER",
+        "label": "Phone Number",
+        "status": "deployed",
+        "required": "0"
+    },
+    "phone_number_1": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "Phone",
+        "format": "",
+        "name": "phone_number_1",
+        "vname": "LBL_PHONE_NUMBER_1",
+        "label": "Phone Number"
+    },
+    "pan_no": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "format": "",
+        "name": "pan_no",
+        "vname": "LBL_PAN_NO",
+        "label": "PAN"
+    },
+    "tan_no": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "format": "",
+        "name": "tan_no",
+        "vname": "LBL_TAN_NO",
+        "label": "TAN"
+    },
+    "cin": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxTextBox",
+        "format": "",
+        "name": "cin",
+        "vname": "LBL_CIN",
+        "label": "CIN"
+    },
+    "account_type": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "dxSelectBox",
+        "format": "",
+        "name": "account_type",
+        "vname": "LBL_ACCOUNT_TYPE",
+        "label": "Account Type",
+        "options": "account_type_new_options"
+    },
+    "InventoryDetail_LineItem": {
+        "editorOptions": {
+            "precision": "2"
+        },
+        "validationRules": [],
+        "editorType": "LineItemField",
+        "format": "",
+        "label": "Test Line Item",
+        "rmodule1": "InventoryDetail",
+        "name": "InventoryDetail_LineItem",
+        "relate_name": "rlt_account_inventorydetail",
+        "source": "non-db"
+    },
+    "Address_LineItem": {
+        "editorOptions": [],
+        "validationRules": [],
+        "editorType": "LineItemField",
+        "format": "",
+        "label": "Address Test Line Item",
+        "rmodule1": "Address",
+        "name": "Address_LineItem",
+        "relate_name": "rlt_account_address",
+        "source": "non-db",
+        "status": "deployed",
+        "lineItemType": "Address"
+    }
 }
