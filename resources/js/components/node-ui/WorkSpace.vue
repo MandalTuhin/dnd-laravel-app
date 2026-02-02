@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { SaveIcon } from 'lucide-vue-next';
+import { SquarePlus } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useNodeStore } from '@/stores/useNodeStore';
@@ -61,13 +62,22 @@ const handleSave = () => {
             <AddContainerForm />
             <button
                 @click="handleSave"
-                class="mt-4 flex items-center gap-2 rounded bg-green-800 px-6 py-2 text-white shadow transition-colors hover:bg-green-900"
+                class="mt-4 flex cursor-pointer items-center gap-2 rounded bg-green-800 px-6 py-2 text-white shadow transition-colors hover:bg-green-900"
             >
                 <SaveIcon />
                 Save Layout
             </button>
         </div>
 
+        <div
+            v-if="!store.workspaceContainers.length"
+            class="flex h-full flex-col items-center justify-center gap-2"
+        >
+            <SquarePlus class="size-16 text-gray-600" />
+            <p class="text-center text-sm text-muted-foreground">
+                Drag and drop containers to get started
+            </p>
+        </div>
         <VueDraggable
             v-model="store.workspaceContainers"
             class="relative flex flex-col gap-4"

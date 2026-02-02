@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SquarePlus } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { useNodeStore } from '@/stores/useNodeStore';
 
@@ -58,9 +59,10 @@ watch(newContainerName, () => {
         </div>
         <button
             @click="handleAddContainer"
-            class="mt-6 h-9.5 cursor-pointer rounded bg-blue-700 px-4 py-2 text-white transition-colors hover:bg-blue-800"
+            class="mt-6 flex h-9 cursor-pointer items-center gap-2 rounded bg-blue-700 px-4 py-2 text-white transition-colors hover:bg-blue-800"
         >
-            Add Sub-Container
+            <SquarePlus class="size-4" />
+            Add Container
         </button>
     </div>
 </template>
