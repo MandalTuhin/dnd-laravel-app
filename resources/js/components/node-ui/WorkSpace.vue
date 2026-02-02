@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { SaveIcon } from 'lucide-vue-next';
-import { SquarePlus } from 'lucide-vue-next';
+import { SaveIcon, Plus } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useNodeStore } from '@/stores/useNodeStore';
@@ -73,7 +72,7 @@ const handleSave = () => {
             v-if="!store.workspaceContainers.length"
             class="flex h-full flex-col items-center justify-center gap-2"
         >
-            <SquarePlus class="size-16 text-gray-600" />
+            <Plus class="size-16 text-gray-600" />
             <p class="text-center text-sm text-muted-foreground">
                 Drag and drop containers to get started
             </p>
