@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import { useDragIndicators } from './composables/useDragIndicators';
+import DragIndicators from './DragIndicators.vue';
+import NodeItem from './NodeItem.vue';
+
+interface Node {
+    id: string | number;
+    label: string;
+}
+
+const props = defineProps<{
+    nodes: Node[];
+    numCol: number;
+}>();
+
+const emit = defineEmits<{
+    'update:nodes': [nodes: Node[]];
+}>();
+
+const nodes = computed({
+    get: () => props.nodes,
+    set: (val) => emit('update:nodes', val),
+});
+
+const itemWidth = computed(() => {
+    return `${100 / props.numCol}%`;
+});
+
+const {
+    indicatorIndex,
+    indicatorSide,
+    isDraggingOverEmpty,
+    onMove,
+    onEnd,
+    onDragLeave,
+} = useDragIndicators();
+</script>
+
 <template>
     <div class="relative flex-1 p-2">
         <DragIndicators
@@ -38,46 +78,6 @@
         </VueDraggable>
     </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { VueDraggable } from 'vue-draggable-plus';
-import { useDragIndicators } from './composables/useDragIndicators';
-import DragIndicators from './DragIndicators.vue';
-import NodeItem from './NodeItem.vue';
-
-interface Node {
-    id: string | number;
-    label: string;
-}
-
-const props = defineProps<{
-    nodes: Node[];
-    numCol: number;
-}>();
-
-const emit = defineEmits<{
-    'update:nodes': [nodes: Node[]];
-}>();
-
-const nodes = computed({
-    get: () => props.nodes,
-    set: (val) => emit('update:nodes', val),
-});
-
-const itemWidth = computed(() => {
-    return `${100 / props.numCol}%`;
-});
-
-const {
-    indicatorIndex,
-    indicatorSide,
-    isDraggingOverEmpty,
-    onMove,
-    onEnd,
-    onDragLeave,
-} = useDragIndicators();
-</script>
 
 <style scoped>
 .sortable-container {
