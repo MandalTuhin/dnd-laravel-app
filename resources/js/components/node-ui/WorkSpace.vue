@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SaveIcon, Plus } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useNodeStore } from '@/stores/useNodeStore';
 import AddContainerForm from './AddContainerForm.vue';
@@ -8,6 +8,11 @@ import DragIndicator from './DragIndicator.vue';
 import SubContainer from './SubContainer.vue';
 
 const store = useNodeStore();
+
+// Load workspace from server on component mount
+onMounted(async () => {
+    await store.loadLatestLayout();
+});
 
 // Consolidated drag state
 const dragState = ref({
@@ -41,7 +46,8 @@ const clearDragState = () => {
 };
 
 // Separated save concerns
-const saveToStorage = () => store.saveLayout();
+// Comment out localStorage saving - now we only save to server
+// const saveToStorage = () => store.saveLayout();
 
 const saveToServer = async () => {
     try {
@@ -91,13 +97,10 @@ const downloadLayout = () => {
 
 const handleSave = async () => {
     try {
-        // 1. Persist state to LocalStorage (Restores on reload)
-        saveToStorage();
-
-        // 2. Save to server
+        // 1. Save to server (primary storage)
         await saveToServer();
 
-        // 3. Also download JSON file for backup
+        // 2. Also download JSON file for backup
         downloadLayout();
 
         // Optional: Show success message
@@ -126,7 +129,33 @@ const handleSave = async () => {
         </div>
 
         <div
-            v-if="!store.workspaceContainers.length"
+            v-if="store.isLoading"
+            class="flex h-full flex-col items-center justify-center gap-2"
+        >
+            <div
+                class="size-8 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+            ></div>
+            <p class="text-center text-sm text-muted-foreground">
+                Loading workspace from server...
+            </p>
+        </div>
+        <div
+            v-else-if="store.loadError"
+            class="flex h-full flex-col items-center justify-center gap-2"
+        >
+            <div class="size-16 text-red-400">⚠️</div>
+            <p class="text-center text-sm text-red-600">
+                {{ store.loadError }}
+            </p>
+            <button
+                @click="store.loadLatestLayout()"
+                class="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+                Retry
+            </button>
+        </div>
+        <div
+            v-else-if="!store.workspaceContainers.length"
             class="flex h-full flex-col items-center justify-center gap-2"
         >
             <Plus class="size-16 text-gray-400" />
@@ -136,6 +165,11 @@ const handleSave = async () => {
             </p>
         </div>
         <VueDraggable
+            v-if="
+                !store.isLoading &&
+                !store.loadError &&
+                store.workspaceContainers.length
+            "
             v-model="store.workspaceContainers"
             class="relative flex flex-col gap-4"
             handle=".container-handle"

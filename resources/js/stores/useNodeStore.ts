@@ -7,64 +7,157 @@ export type { Node, Container, BackendResponse };
 
 export const useNodeStore = defineStore('nodeStore', {
     state: () => {
-        const STORAGE_KEY = 'vue_drag_drop_layout';
         const allNodes = NodeService.transformBackendNodes(
             initialNodes as BackendResponse,
         );
-        let workspaceContainers: Container[] = [];
-        let availableNodes = allNodes;
+        const workspaceContainers: Container[] = [];
+        const availableNodes = allNodes;
 
-        // Check if running in a browser environment (client-side)
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    const parsedContainers = JSON.parse(saved);
-                    if (Array.isArray(parsedContainers)) {
-                        workspaceContainers = parsedContainers;
-
-                        // Identify nodes already used in the workspace to remove them from sidebar
-                        const usedDataFields = new Set<string>();
-                        workspaceContainers.forEach((container) => {
-                            container.nodes.forEach((node) => {
-                                // We check 'dataField' to prevent original fields from showing up
-                                // even if they were cloned with a new UUID.
-                                if (node.dataField !== 'spacer') {
-                                    usedDataFields.add(node.dataField);
-                                }
-                            });
-                        });
-
-                        availableNodes = allNodes.filter(
-                            (node) =>
-                                node.id === 'spacer' ||
-                                !usedDataFields.has(node.dataField),
-                        );
-                    }
-                } catch (e) {
-                    console.error(
-                        'Failed to restore workspace from localStorage',
-                        e,
-                    );
-                }
-            }
-        }
+        // Comment out localStorage loading - now we load from server
+        // const STORAGE_KEY = 'vue_drag_drop_layout';
+        // if (typeof window !== 'undefined') {
+        //     const saved = localStorage.getItem(STORAGE_KEY);
+        //     if (saved) {
+        //         try {
+        //             const parsedContainers = JSON.parse(saved);
+        //             if (Array.isArray(parsedContainers)) {
+        //                 workspaceContainers = parsedContainers;
+        //                 // ... localStorage restoration logic
+        //             }
+        //         } catch (e) {
+        //             console.error('Failed to restore workspace from localStorage', e);
+        //         }
+        //     }
+        // }
 
         return {
             workspaceContainers,
             availableNodes,
+            isLoading: false,
+            loadError: null as string | null,
         };
     },
     actions: {
-        saveLayout() {
-            const STORAGE_KEY = 'vue_drag_drop_layout';
-            if (typeof window !== 'undefined') {
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(this.workspaceContainers),
+        // Comment out localStorage saving
+        // saveLayout() {
+        //     const STORAGE_KEY = 'vue_drag_drop_layout';
+        //     if (typeof window !== 'undefined') {
+        //         localStorage.setItem(
+        //             STORAGE_KEY,
+        //             JSON.stringify(this.workspaceContainers),
+        //         );
+        //     }
+        // },
+
+        async loadLatestLayout() {
+            this.isLoading = true;
+            this.loadError = null;
+
+            try {
+                const response = await fetch('/api/layouts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                // Get the most recent layout (first in the sorted list)
+                if (result.layouts && result.layouts.length > 0) {
+                    const latestLayout = result.layouts[0];
+                    await this.loadSpecificLayout(latestLayout.filename);
+                } else {
+                    // No saved layouts, start with empty workspace
+                    this.workspaceContainers = [];
+                    this.availableNodes = NodeService.transformBackendNodes(
+                        initialNodes as BackendResponse,
+                    );
+                }
+            } catch (error) {
+                console.error('Failed to load layouts from server:', error);
+                this.loadError = 'Failed to load workspace from server';
+                // Fallback to empty workspace
+                this.workspaceContainers = [];
+                this.availableNodes = NodeService.transformBackendNodes(
+                    initialNodes as BackendResponse,
                 );
+            } finally {
+                this.isLoading = false;
             }
         },
+
+        async loadSpecificLayout(filename: string) {
+            try {
+                const response = await fetch(`/api/layouts/${filename}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                // Convert server layout back to workspace containers
+                this.workspaceContainers = this.convertServerLayoutToContainers(
+                    result.layout,
+                );
+
+                // Update available nodes based on what's used in containers
+                this.updateAvailableNodes();
+            } catch (error) {
+                console.error('Failed to load specific layout:', error);
+                throw error;
+            }
+        },
+
+        convertServerLayoutToContainers(serverLayout: any[]): Container[] {
+            return serverLayout.map((group: any) => ({
+                id: crypto.randomUUID(), // Generate new ID for frontend
+                name: group.name || 'Untitled Container',
+                numCol: group.colCount || 1,
+                nodes: (group.items || []).map((item: any) => ({
+                    id: crypto.randomUUID(), // Generate new ID for frontend
+                    label:
+                        item.label?.text || item.dataField || 'Unknown Field',
+                    dataField: item.dataField,
+                    editorType: item.editorType,
+                    metadata: item,
+                })),
+            }));
+        },
+
+        updateAvailableNodes() {
+            const allNodes = NodeService.transformBackendNodes(
+                initialNodes as BackendResponse,
+            );
+
+            // Identify nodes already used in the workspace
+            const usedDataFields = new Set<string>();
+            this.workspaceContainers.forEach((container) => {
+                container.nodes.forEach((node) => {
+                    if (node.dataField !== 'spacer') {
+                        usedDataFields.add(node.dataField);
+                    }
+                });
+            });
+
+            this.availableNodes = allNodes.filter(
+                (node) =>
+                    node.id === 'spacer' || !usedDataFields.has(node.dataField),
+            );
+        },
+
         addContainer(name: string) {
             this.workspaceContainers.push({
                 id: crypto.randomUUID(),

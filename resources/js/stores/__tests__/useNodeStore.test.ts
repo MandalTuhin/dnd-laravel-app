@@ -43,56 +43,57 @@ describe('useNodeStore', () => {
     });
 
     describe('initialization', () => {
-        it('should initialize with empty workspace when no localStorage data', () => {
+        it('should initialize with empty workspace when no server data', () => {
             const store = useNodeStore();
 
             expect(store.workspaceContainers).toEqual([]);
             expect(store.availableNodes).toHaveLength(3); // 2 fields + spacer
         });
 
-        it('should restore from localStorage when data exists', () => {
-            const savedData = [
-                {
-                    id: 'container1',
-                    name: 'Test Container',
-                    numCol: 1,
-                    nodes: [
-                        {
-                            id: 'first_name',
-                            label: 'First Name',
-                            dataField: 'first_name',
-                            editorType: 'dxTextBox',
-                            metadata: {},
-                        },
-                    ],
-                },
-            ];
+        // Comment out localStorage tests since we removed that functionality
+        // it('should restore from localStorage when data exists', () => {
+        //     const savedData = [
+        //         {
+        //             id: 'container1',
+        //             name: 'Test Container',
+        //             numCol: 1,
+        //             nodes: [
+        //                 {
+        //                     id: 'first_name',
+        //                     label: 'First Name',
+        //                     dataField: 'first_name',
+        //                     editorType: 'dxTextBox',
+        //                     metadata: {},
+        //                 },
+        //             ],
+        //         },
+        //     ];
 
-            localStorageMock.getItem.mockReturnValue(JSON.stringify(savedData));
+        //     localStorageMock.getItem.mockReturnValue(JSON.stringify(savedData));
 
-            const store = useNodeStore();
+        //     const store = useNodeStore();
 
-            expect(store.workspaceContainers).toEqual(savedData);
-            // Should filter out used nodes from available nodes
-            expect(store.availableNodes).toHaveLength(2); // email + spacer (first_name is used)
-        });
+        //     expect(store.workspaceContainers).toEqual(savedData);
+        //     // Should filter out used nodes from available nodes
+        //     expect(store.availableNodes).toHaveLength(2); // email + spacer (first_name is used)
+        // });
 
-        it('should handle invalid localStorage data gracefully', () => {
-            localStorageMock.getItem.mockReturnValue('invalid json');
-            const consoleSpy = vi
-                .spyOn(console, 'error')
-                .mockImplementation(() => {});
+        // it('should handle invalid localStorage data gracefully', () => {
+        //     localStorageMock.getItem.mockReturnValue('invalid json');
+        //     const consoleSpy = vi
+        //         .spyOn(console, 'error')
+        //         .mockImplementation(() => {});
 
-            const store = useNodeStore();
+        //     const store = useNodeStore();
 
-            expect(store.workspaceContainers).toEqual([]);
-            expect(consoleSpy).toHaveBeenCalledWith(
-                'Failed to restore workspace from localStorage',
-                expect.any(Error),
-            );
+        //     expect(store.workspaceContainers).toEqual([]);
+        //     expect(consoleSpy).toHaveBeenCalledWith(
+        //         'Failed to restore workspace from localStorage',
+        //         expect.any(Error),
+        //     );
 
-            consoleSpy.mockRestore();
-        });
+        //     consoleSpy.mockRestore();
+        // });
     });
 
     describe('actions', () => {
@@ -253,19 +254,20 @@ describe('useNodeStore', () => {
             });
         });
 
-        describe('saveLayout', () => {
-            it('should save to localStorage', () => {
-                const store = useNodeStore();
-                store.addContainer('Test Container');
+        // Comment out localStorage save test since we removed that functionality
+        // describe('saveLayout', () => {
+        //     it('should save to localStorage', () => {
+        //         const store = useNodeStore();
+        //         store.addContainer('Test Container');
 
-                store.saveLayout();
+        //         store.saveLayout();
 
-                expect(localStorageMock.setItem).toHaveBeenCalledWith(
-                    'vue_drag_drop_layout',
-                    JSON.stringify(store.workspaceContainers),
-                );
-            });
-        });
+        //         expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        //             'vue_drag_drop_layout',
+        //             JSON.stringify(store.workspaceContainers),
+        //         );
+        //     });
+        // });
 
         describe('getLayoutJson', () => {
             it('should return exported layout', () => {
