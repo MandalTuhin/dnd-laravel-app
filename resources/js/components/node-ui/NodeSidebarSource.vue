@@ -30,12 +30,12 @@ const handleClone = (node: Node) => {
 
 const filteredMainNodes = computed({
     get: () => {
-        const nodes = store.availableNodes.filter(
-            (node) => !NodeService.isSpacer(node),
-        );
-        if (!searchQuery.value) return nodes;
         const query = searchQuery.value.toLowerCase();
-        return nodes.filter((node) => node.label.toLowerCase().includes(query));
+        return store.availableNodes.filter(
+            (node) =>
+                !NodeService.isSpacer(node) &&
+                node.label.toLowerCase().includes(query),
+        );
     },
     set: (val) => {
         const query = searchQuery.value.toLowerCase();
@@ -53,12 +53,12 @@ const filteredMainNodes = computed({
 
 const filteredSpacerNodes = computed({
     get: () => {
-        const nodes = store.availableNodes.filter((node) =>
-            NodeService.isSpacer(node),
-        );
-        if (!searchQuery.value) return nodes;
         const query = searchQuery.value.toLowerCase();
-        return nodes.filter((node) => node.label.toLowerCase().includes(query));
+        return store.availableNodes.filter(
+            (node) =>
+                NodeService.isSpacer(node) &&
+                node.label.toLowerCase().includes(query),
+        );
     },
     set: (val) => {
         const query = searchQuery.value.toLowerCase();
