@@ -14,6 +14,8 @@ class LayoutController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        \Log::info('Layout store method called', ['request' => $request->all()]);
+
         $request->validate([
             'layout' => 'required|array',
             'name' => 'nullable|string|max:255',
@@ -22,23 +24,32 @@ class LayoutController extends Controller
         $layout = $request->input('layout');
         $name = $request->input('name', 'layout_'.now()->format('Y-m-d_H-i-s'));
 
+        \Log::info('Processing layout', ['name' => $name, 'layout_count' => count($layout)]);
+
         // Ensure the name is safe for filesystem
         $filename = Str::slug($name).'.json';
 
         // Create layouts directory if it doesn't exist
         if (! Storage::disk('local')->exists('layouts')) {
+            \Log::info('Creating layouts directory');
             Storage::disk('local')->makeDirectory('layouts');
         }
 
         // Save the layout JSON
         $path = 'layouts/'.$filename;
-        Storage::disk('local')->put($path, json_encode($layout, JSON_PRETTY_PRINT));
+        $jsonContent = json_encode($layout, JSON_PRETTY_PRINT);
+
+        \Log::info('Saving file', ['path' => $path, 'content_length' => strlen($jsonContent)]);
+
+        $result = Storage::disk('local')->put($path, $jsonContent);
+
+        \Log::info('File save result', ['result' => $result, 'full_path' => storage_path('app/'.$path)]);
 
         return response()->json([
             'success' => true,
             'message' => 'Layout saved successfully',
             'filename' => $filename,
-            'path' => storage_path('app/'.$path),
+            'path' => storage_path('app/private/'.$path),
         ]);
     }
 
