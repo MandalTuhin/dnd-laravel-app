@@ -43,6 +43,39 @@ const clearDragState = () => {
 // Separated save concerns
 const saveToStorage = () => store.saveLayout();
 
+const saveToServer = async () => {
+    try {
+        const layout = store.getLayoutJson();
+        const layoutName = `layout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`;
+
+        const response = await fetch('/api/layouts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN':
+                    document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content') || '',
+            },
+            body: JSON.stringify({
+                layout: layout,
+                name: layoutName,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Layout saved to server:', result);
+        return result;
+    } catch (error) {
+        console.error('Failed to save layout to server:', error);
+        throw error;
+    }
+};
+
 const downloadLayout = () => {
     const layout = store.getLayoutJson();
     const jsonString = JSON.stringify(layout, null, 2);
@@ -59,12 +92,26 @@ const downloadLayout = () => {
     console.log('Form Layout Export:', layout);
 };
 
-const handleSave = () => {
-    // 1. Persist state to LocalStorage (Restores on reload)
-    saveToStorage();
+const handleSave = async () => {
+    try {
+        // 1. Persist state to LocalStorage (Restores on reload)
+        saveToStorage();
 
-    // 2. Export and Download JSON (Business Logic)
-    downloadLayout();
+        // 2. Save to server
+        await saveToServer();
+
+        // 3. Also download JSON file for backup
+        downloadLayout();
+
+        // Optional: Show success message
+        alert('Layout saved successfully to server and downloaded!');
+    } catch (error) {
+        console.error('Save failed:', error);
+        alert('Failed to save layout to server. Check console for details.');
+
+        // Still download the file as fallback
+        downloadLayout();
+    }
 };
 </script>
 
