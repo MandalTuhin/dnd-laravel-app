@@ -97,14 +97,17 @@ export const useNodeStore = defineStore('nodeStore', {
                 const container = this.workspaceContainers[containerIndex];
 
                 if (container) {
+                    // Optimization: Use a Set for O(1) lookup to avoid O(N^2) complexity
+                    const existingDataFields = new Set(
+                        this.availableNodes.map((n) => n.dataField),
+                    );
+
                     // Rescue standard nodes (non-spacers) and return them to the sidebar
                     container.nodes.forEach((node) => {
                         if (node.dataField !== 'spacer') {
-                            const alreadyInSidebar = this.availableNodes.some(
-                                (n) => n.dataField === node.dataField,
-                            );
-                            if (!alreadyInSidebar) {
+                            if (!existingDataFields.has(node.dataField)) {
                                 this.availableNodes.push(node);
+                                existingDataFields.add(node.dataField);
                             }
                         }
                     });
