@@ -155,13 +155,16 @@ const filteredSpacerNodes = computed({
             </div>
 
             <!-- Main Nodes Section -->
-            <div v-if="filteredMainNodes.length">
-                <h3 class="mb-2 text-xs font-semibold text-gray-500 uppercase">
+            <div>
+                <h3
+                    v-if="filteredMainNodes.length"
+                    class="mb-2 text-xs font-semibold text-gray-500 uppercase"
+                >
                     Main Nodes
                 </h3>
                 <VueDraggable
                     v-model="filteredMainNodes"
-                    class="flex flex-col gap-2"
+                    class="flex min-h-[150px] flex-col gap-2 pb-4"
                     :group="{ name: 'nodeGroup', pull: true, put: true }"
                     :clone="handleClone"
                     :animation="300"
