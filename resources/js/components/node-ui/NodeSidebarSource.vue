@@ -94,7 +94,8 @@ const filteredSpacerNodes = computed({
                     v-model="searchQuery"
                     type="text"
                     placeholder="Search fields..."
-                    class="w-full rounded-md border border-gray-200 py-2 pr-9 pl-9 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    :disabled="store.isLoading || store.loadError"
+                    class="w-full rounded-md border border-gray-200 py-2 pr-9 pl-9 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-100"
                 />
                 <button
                     v-if="searchQuery"
@@ -107,9 +108,45 @@ const filteredSpacerNodes = computed({
         </div>
 
         <div class="flex-1 space-y-6 overflow-y-auto p-4">
-            <!-- Empty State -->
+            <!-- Loading State -->
             <div
-                v-if="!filteredMainNodes.length && !filteredSpacerNodes.length"
+                v-if="store.isLoading"
+                class="flex flex-col items-center justify-center py-8 text-center"
+            >
+                <div
+                    class="mb-3 size-8 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+                ></div>
+                <div class="text-sm text-gray-500">
+                    Loading available elements...
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div
+                v-else-if="store.loadError"
+                class="flex flex-col items-center justify-center py-8 text-center"
+            >
+                <div class="mb-3 size-12 text-red-400">⚠️</div>
+                <div class="mb-3 text-sm text-red-600">
+                    Failed to load elements
+                </div>
+                <button
+                    @click="store.loadLatestLayout()"
+                    class="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                >
+                    Retry
+                </button>
+            </div>
+
+            <!-- Empty Search State -->
+            <div
+                v-else-if="
+                    !store.isLoading &&
+                    !store.loadError &&
+                    !filteredMainNodes.length &&
+                    !filteredSpacerNodes.length &&
+                    searchQuery
+                "
                 class="flex flex-col items-center justify-center py-8 text-center"
             >
                 <div class="text-sm text-gray-500">
@@ -124,68 +161,73 @@ const filteredSpacerNodes = computed({
                 </div>
             </div>
 
-            <!-- Spacer Nodes Section -->
-            <div v-if="filteredSpacerNodes.length">
-                <h3 class="mb-2 text-xs font-semibold text-gray-500 uppercase">
-                    Spacer Nodes
-                </h3>
-                <VueDraggable
-                    v-model="filteredSpacerNodes"
-                    class="flex flex-col gap-2"
-                    :group="{ name: 'nodeGroup', pull: 'clone', put: true }"
-                    :clone="handleClone"
-                    :animation="300"
-                    :force-fallback="true"
-                    fallback-class="dragging-card"
-                    ghost-class="ghost-item"
-                    @add="onAdd"
-                >
-                    <div
-                        v-for="node in filteredSpacerNodes"
-                        :key="node.id"
-                        :data-id="node.id"
-                        class="item block cursor-grab active:cursor-grabbing"
+            <!-- Content - Only show when not loading and no error -->
+            <template v-else-if="!store.isLoading && !store.loadError">
+                <!-- Spacer Nodes Section -->
+                <div v-if="filteredSpacerNodes.length">
+                    <h3
+                        class="mb-2 text-xs font-semibold text-gray-500 uppercase"
                     >
-                        <NodeItem
-                            :name="node.label"
-                            class="flex h-10 items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 font-mono text-sm text-gray-500"
-                        />
-                    </div>
-                </VueDraggable>
-            </div>
+                        Spacer Nodes
+                    </h3>
+                    <VueDraggable
+                        v-model="filteredSpacerNodes"
+                        class="flex flex-col gap-2"
+                        :group="{ name: 'nodeGroup', pull: 'clone', put: true }"
+                        :clone="handleClone"
+                        :animation="300"
+                        :force-fallback="true"
+                        fallback-class="dragging-card"
+                        ghost-class="ghost-item"
+                        @add="onAdd"
+                    >
+                        <div
+                            v-for="node in filteredSpacerNodes"
+                            :key="node.id"
+                            :data-id="node.id"
+                            class="item block cursor-grab active:cursor-grabbing"
+                        >
+                            <NodeItem
+                                :name="node.label"
+                                class="flex h-10 items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 font-mono text-sm text-gray-500"
+                            />
+                        </div>
+                    </VueDraggable>
+                </div>
 
-            <!-- Main Nodes Section -->
-            <div>
-                <h3
-                    v-if="filteredMainNodes.length"
-                    class="mb-2 text-xs font-semibold text-gray-500 uppercase"
-                >
-                    Main Nodes
-                </h3>
-                <VueDraggable
-                    v-model="filteredMainNodes"
-                    class="flex min-h-[150px] flex-col gap-2 pb-4"
-                    :group="{ name: 'nodeGroup', pull: true, put: true }"
-                    :clone="handleClone"
-                    :animation="300"
-                    :force-fallback="true"
-                    fallback-class="dragging-card"
-                    ghost-class="ghost-item"
-                    @add="onAdd"
-                >
-                    <div
-                        v-for="node in filteredMainNodes"
-                        :key="node.id"
-                        :data-id="node.id"
-                        class="item block cursor-grab active:cursor-grabbing"
+                <!-- Main Nodes Section -->
+                <div>
+                    <h3
+                        v-if="filteredMainNodes.length"
+                        class="mb-2 text-xs font-semibold text-gray-500 uppercase"
                     >
-                        <NodeItem
-                            :name="node.label"
-                            class="transition-colors hover:border-blue-400"
-                        />
-                    </div>
-                </VueDraggable>
-            </div>
+                        Main Nodes
+                    </h3>
+                    <VueDraggable
+                        v-model="filteredMainNodes"
+                        class="flex min-h-[150px] flex-col gap-2 pb-4"
+                        :group="{ name: 'nodeGroup', pull: true, put: true }"
+                        :clone="handleClone"
+                        :animation="300"
+                        :force-fallback="true"
+                        fallback-class="dragging-card"
+                        ghost-class="ghost-item"
+                        @add="onAdd"
+                    >
+                        <div
+                            v-for="node in filteredMainNodes"
+                            :key="node.id"
+                            :data-id="node.id"
+                            class="item block cursor-grab active:cursor-grabbing"
+                        >
+                            <NodeItem
+                                :name="node.label"
+                                class="transition-colors hover:border-blue-400"
+                            />
+                        </div>
+                    </VueDraggable>
+                </div>
+            </template>
         </div>
     </aside>
 </template>
