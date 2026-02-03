@@ -72,9 +72,10 @@ const handleSave = () => {
             v-if="!store.workspaceContainers.length"
             class="flex h-full flex-col items-center justify-center gap-2"
         >
-            <Plus class="size-16 text-gray-600" />
+            <Plus class="size-16 text-gray-400" />
             <p class="text-center text-sm text-muted-foreground">
-                Drag and drop containers to get started
+                Your workspace is empty. <br />
+                Create a container to start building your layout.
             </p>
         </div>
         <VueDraggable
