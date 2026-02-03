@@ -8,8 +8,12 @@ import DragIndicator from './DragIndicator.vue';
 import SubContainer from './SubContainer.vue';
 
 const store = useNodeStore();
-const indicatorIndex = ref<number | null>(null);
-const indicatorSide = ref<'top' | 'bottom'>('top');
+
+// Consolidated drag state
+const dragState = ref({
+    indicatorIndex: null as number | null,
+    indicatorSide: 'top' as 'top' | 'bottom',
+});
 
 interface DraggableMoveEvent {
     relatedContext: { index: number | null | undefined };
@@ -17,41 +21,50 @@ interface DraggableMoveEvent {
     originalEvent: { clientY: number };
 }
 
-const onMove = (e: DraggableMoveEvent) => {
-    const { relatedContext } = e;
-    indicatorIndex.value = relatedContext.index ?? null;
+// Simplified drag move handler
+const handleDragMove = (e: DraggableMoveEvent) => {
+    const { relatedContext, related, originalEvent } = e;
 
-    const rect = e.related.getBoundingClientRect();
-    const mouseY = e.originalEvent.clientY;
+    dragState.value.indicatorIndex = relatedContext.index ?? null;
+
+    const rect = related.getBoundingClientRect();
     const midY = rect.top + rect.height / 2;
+    dragState.value.indicatorSide =
+        originalEvent.clientY > midY ? 'bottom' : 'top';
 
-    indicatorSide.value = mouseY > midY ? 'bottom' : 'top';
     return false;
 };
 
-const onEnd = () => {
-    indicatorIndex.value = null;
+// Clear drag state when drag ends
+const clearDragState = () => {
+    dragState.value.indicatorIndex = null;
 };
 
-const handleSave = () => {
-    // 1. Persist state to LocalStorage (Restores on reload)
-    store.saveLayout();
+// Separated save concerns
+const saveToStorage = () => store.saveLayout();
 
-    // 2. Export and Download JSON (Business Logic)
+const downloadLayout = () => {
     const layout = store.getLayoutJson();
     const jsonString = JSON.stringify(layout, null, 2);
 
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'layout.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
 
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'layout.json';
+    link.click();
+
+    URL.revokeObjectURL(url);
     console.log('Form Layout Export:', layout);
+};
+
+const handleSave = () => {
+    // 1. Persist state to LocalStorage (Restores on reload)
+    saveToStorage();
+
+    // 2. Export and Download JSON (Business Logic)
+    downloadLayout();
 };
 </script>
 
@@ -84,19 +97,19 @@ const handleSave = () => {
             handle=".container-handle"
             :animation="250"
             ghost-class="opacity-30"
-            :move="onMove"
-            @end="onEnd"
-            @drag-leave="onEnd"
+            :move="handleDragMove"
+            @end="clearDragState"
+            @drag-leave="clearDragState"
         >
             <div
                 v-for="(container, index) in store.workspaceContainers"
                 :key="container.id"
                 class="relative"
             >
-                <!-- Horizontal Indicator -->
+                <!-- Horizontal Indicator - Only render when needed -->
                 <DragIndicator
-                    :index="indicatorIndex === index ? index : null"
-                    :side="indicatorSide"
+                    v-if="dragState.indicatorIndex === index"
+                    :side="dragState.indicatorSide"
                 />
                 <SubContainer :container="container" />
             </div>
