@@ -62,8 +62,18 @@ describe('NodeStore', () => {
             if (!containerId) throw new Error('Container ID not found');
 
             // Manually add nodes to the container
-            const standardNode = { id: 'test-1', label: 'Input Field' };
-            const spacerNode = { id: 'test-spacer', label: '[ || ]' };
+            const standardNode = {
+                id: 'test-1',
+                label: 'Input Field',
+                dataField: 'test-1',
+                metadata: {},
+            };
+            const spacerNode = {
+                id: 'test-spacer',
+                label: '[ || ]',
+                dataField: 'spacer',
+                metadata: {},
+            };
             store.updateContainerNodes(containerId, [standardNode, spacerNode]);
 
             // Initial available nodes count
@@ -91,7 +101,14 @@ describe('NodeStore', () => {
             store.addContainer('Update Test');
             const containerId = store.workspaceContainers[0]?.id;
             if (!containerId) throw new Error('Container ID not found');
-            const newNodes = [{ id: '99', label: 'Dynamic Node' }];
+            const newNodes = [
+                {
+                    id: '99',
+                    label: 'Dynamic Node',
+                    dataField: 'dynamic-node',
+                    metadata: {},
+                },
+            ];
 
             store.updateContainerNodes(containerId, newNodes);
             expect(store.workspaceContainers[0]?.nodes).toEqual(newNodes);
