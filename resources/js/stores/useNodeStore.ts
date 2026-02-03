@@ -126,14 +126,33 @@ export const useNodeStore = defineStore('nodeStore', {
                 id: crypto.randomUUID(), // Generate new ID for frontend
                 name: group.name || 'Untitled Container',
                 numCol: group.colCount || 1,
-                nodes: (group.items || []).map((item: any) => ({
-                    id: crypto.randomUUID(), // Generate new ID for frontend
-                    label:
-                        item.label?.text || item.dataField || 'Unknown Field',
-                    dataField: item.dataField,
-                    editorType: item.editorType,
-                    metadata: item,
-                })),
+                nodes: (group.items || []).map((item: any) => {
+                    // Check if this is a spacer node (no dataField and label text is "[ || ]")
+                    const isSpacerNode =
+                        !item.dataField && item.label?.text === '[ || ]';
+
+                    if (isSpacerNode) {
+                        return {
+                            id: crypto.randomUUID(),
+                            label: '[ || ]',
+                            dataField: 'spacer',
+                            editorType: item.editorType,
+                            metadata: item,
+                        };
+                    }
+
+                    // Regular node
+                    return {
+                        id: crypto.randomUUID(), // Generate new ID for frontend
+                        label:
+                            item.label?.text ||
+                            item.dataField ||
+                            'Unknown Field',
+                        dataField: item.dataField,
+                        editorType: item.editorType,
+                        metadata: item,
+                    };
+                }),
             }));
         },
 

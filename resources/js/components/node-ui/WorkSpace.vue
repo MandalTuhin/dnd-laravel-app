@@ -45,11 +45,7 @@ const clearDragState = () => {
     dragState.value.indicatorIndex = null;
 };
 
-// Separated save concerns
-// Comment out localStorage saving - now we only save to server
-// const saveToStorage = () => store.saveLayout();
-
-const saveToServer = async () => {
+const handleSave = async () => {
     try {
         const layout = store.getLayoutJson();
         const layoutName = `layout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`;
@@ -72,45 +68,12 @@ const saveToServer = async () => {
 
         const result = await response.json();
         console.log('Layout saved to server:', result);
-        return result;
+
+        // Show success message
+        alert('Layout saved successfully!');
     } catch (error) {
         console.error('Failed to save layout to server:', error);
-        throw error;
-    }
-};
-
-const downloadLayout = () => {
-    const layout = store.getLayoutJson();
-    const jsonString = JSON.stringify(layout, null, 2);
-
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'layout.json';
-    link.click();
-
-    URL.revokeObjectURL(url);
-    console.log('Form Layout Export:', layout);
-};
-
-const handleSave = async () => {
-    try {
-        // 1. Save to server (primary storage)
-        await saveToServer();
-
-        // 2. Also download JSON file for backup
-        downloadLayout();
-
-        // Optional: Show success message
-        alert('Layout saved successfully to server and downloaded!');
-    } catch (error) {
-        console.error('Save failed:', error);
-        alert('Failed to save layout to server. Check console for details.');
-
-        // Still download the file as fallback
-        downloadLayout();
+        alert('Failed to save layout. Please try again.');
     }
 };
 </script>
