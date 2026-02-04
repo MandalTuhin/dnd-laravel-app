@@ -2,18 +2,6 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useNodeStore } from '../useNodeStore';
 
-// Mock localStorage
-const localStorageMock = {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    clear: vi.fn(),
-};
-
-Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock,
-});
-
 // Mock crypto.randomUUID
 Object.defineProperty(globalThis, 'crypto', {
     value: {
@@ -39,7 +27,6 @@ describe('useNodeStore', () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         vi.clearAllMocks();
-        localStorageMock.getItem.mockReturnValue(null);
     });
 
     describe('initialization', () => {
@@ -49,51 +36,6 @@ describe('useNodeStore', () => {
             expect(store.workspaceContainers).toEqual([]);
             expect(store.availableNodes).toHaveLength(3); // 2 fields + spacer
         });
-
-        // Comment out localStorage tests since we removed that functionality
-        // it('should restore from localStorage when data exists', () => {
-        //     const savedData = [
-        //         {
-        //             id: 'container1',
-        //             name: 'Test Container',
-        //             numCol: 1,
-        //             nodes: [
-        //                 {
-        //                     id: 'first_name',
-        //                     label: 'First Name',
-        //                     dataField: 'first_name',
-        //                     editorType: 'dxTextBox',
-        //                     metadata: {},
-        //                 },
-        //             ],
-        //         },
-        //     ];
-
-        //     localStorageMock.getItem.mockReturnValue(JSON.stringify(savedData));
-
-        //     const store = useNodeStore();
-
-        //     expect(store.workspaceContainers).toEqual(savedData);
-        //     // Should filter out used nodes from available nodes
-        //     expect(store.availableNodes).toHaveLength(2); // email + spacer (first_name is used)
-        // });
-
-        // it('should handle invalid localStorage data gracefully', () => {
-        //     localStorageMock.getItem.mockReturnValue('invalid json');
-        //     const consoleSpy = vi
-        //         .spyOn(console, 'error')
-        //         .mockImplementation(() => {});
-
-        //     const store = useNodeStore();
-
-        //     expect(store.workspaceContainers).toEqual([]);
-        //     expect(consoleSpy).toHaveBeenCalledWith(
-        //         'Failed to restore workspace from localStorage',
-        //         expect.any(Error),
-        //     );
-
-        //     consoleSpy.mockRestore();
-        // });
     });
 
     describe('actions', () => {
@@ -288,21 +230,6 @@ describe('useNodeStore', () => {
                 ).toBe(false);
             });
         });
-
-        // Comment out localStorage save test since we removed that functionality
-        // describe('saveLayout', () => {
-        //     it('should save to localStorage', () => {
-        //         const store = useNodeStore();
-        //         store.addContainer('Test Container');
-
-        //         store.saveLayout();
-
-        //         expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        //             'vue_drag_drop_layout',
-        //             JSON.stringify(store.workspaceContainers),
-        //         );
-        //     });
-        // });
 
         describe('getLayoutJson', () => {
             it('should return exported layout', () => {
