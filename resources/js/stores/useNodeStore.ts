@@ -97,35 +97,6 @@ export const useNodeStore = defineStore('nodeStore', {
             }
         },
 
-        async loadSpecificLayout(filename: string) {
-            try {
-                const response = await fetch(`/api/layouts/${filename}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                // Convert server layout back to workspace containers
-                this.workspaceContainers = this.convertServerLayoutToContainers(
-                    result.layout,
-                );
-
-                // Update available nodes based on what's used in containers
-                this.updateAvailableNodes();
-            } catch (error) {
-                console.error('Failed to load specific layout:', error);
-                throw error;
-            }
-        },
-
         convertServerLayoutToContainers(serverLayout: any[]): Container[] {
             return serverLayout.map((group: any) => ({
                 id: crypto.randomUUID(), // Generate new ID for frontend
