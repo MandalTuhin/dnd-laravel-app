@@ -58,6 +58,7 @@ const {
             fallback-class="dragging-card"
             ghost-class="ghost-item"
             class="sortable-container flex min-h-30 flex-wrap content-start transition-all duration-300 ease-in-out"
+            :style="{ '--grid-item-width': itemWidth }"
         >
             <div
                 v-for="(node, index) in nodes"
@@ -106,6 +107,7 @@ const {
     background: #eff6ff !important;
     border: 2px dashed #3b82f6 !important;
     border-radius: 0.5rem;
+    width: var(--grid-item-width) !important;
 }
 
 :deep(.sortable-fallback) {

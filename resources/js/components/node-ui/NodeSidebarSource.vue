@@ -180,6 +180,7 @@ const filteredSpacerNodes = computed({
                         fallback-class="dragging-card"
                         ghost-class="ghost-item"
                         @add="onAdd"
+                        :style="{ '--grid-item-width': '100%' }"
                     >
                         <div
                             v-for="node in filteredSpacerNodes"
@@ -213,6 +214,7 @@ const filteredSpacerNodes = computed({
                         fallback-class="dragging-card"
                         ghost-class="ghost-item"
                         @add="onAdd"
+                        :style="{ '--grid-item-width': '100%' }"
                     >
                         <div
                             v-for="node in filteredMainNodes"
@@ -253,5 +255,6 @@ const filteredSpacerNodes = computed({
     background: #f3f4f6 !important;
     border: 2px dashed #3b82f6 !important;
     border-radius: 0.5rem;
+    width: var(--grid-item-width) !important;
 }
 </style>
