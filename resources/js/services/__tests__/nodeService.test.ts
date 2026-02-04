@@ -166,6 +166,40 @@ describe('NodeService', () => {
 
             expect(result[0].items[0].editorType).toBe('dxTextBox');
         });
+
+        it('should preserve the original dataField (key) even if the node id is a UUID', () => {
+            const mockBackendResponse: BackendResponse = {
+                name: {
+                    editorType: 'dxTextBox',
+                    label: 'Name',
+                },
+            };
+
+            // Simulate a cloned node in the workspace with a UUID
+            const containers: Container[] = [
+                {
+                    id: 'c1',
+                    name: 'Basic Information',
+                    numCol: 2,
+                    nodes: [
+                        {
+                            id: '92257312-16eb-4719-b039-0bc6278821dc', // UUID
+                            label: 'Name',
+                            dataField: 'name', // Original key
+                            editorType: 'dxTextBox',
+                            metadata: mockBackendResponse.name,
+                        },
+                    ],
+                },
+            ];
+
+            const result = NodeService.exportLayout(
+                containers,
+                mockBackendResponse,
+            );
+
+            expect(result[0].items[0].dataField).toBe('name');
+        });
     });
 
     describe('isSpacer', () => {

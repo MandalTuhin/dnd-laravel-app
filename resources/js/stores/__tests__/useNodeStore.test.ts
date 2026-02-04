@@ -194,6 +194,41 @@ describe('useNodeStore', () => {
                 );
             });
 
+            it('should return multiple nodes to sidebar while ignoring spacers', () => {
+                const store = useNodeStore();
+                store.addContainer('Cleanup Panel');
+                const containerId = store.workspaceContainers[0].id;
+
+                const standardNode = {
+                    id: 'test-1',
+                    label: 'Input Field',
+                    dataField: 'test-1',
+                    metadata: {},
+                };
+                const spacerNode = {
+                    id: 'test-spacer',
+                    label: '[ || ]',
+                    dataField: 'spacer',
+                    metadata: {},
+                };
+                store.updateContainerNodes(containerId, [
+                    standardNode,
+                    spacerNode,
+                ]);
+
+                const initialSidebarCount = store.availableNodes.length;
+                store.removeContainer(containerId);
+
+                expect(store.workspaceContainers).toHaveLength(0);
+                expect(store.availableNodes).toContainEqual(standardNode);
+                expect(
+                    store.availableNodes.some((n) => n.id === 'test-spacer'),
+                ).toBe(false);
+                expect(store.availableNodes.length).toBe(
+                    initialSidebarCount + 1,
+                );
+            });
+
             it('should not return spacer nodes to available list', () => {
                 const store = useNodeStore();
                 store.addContainer('Test Container');
