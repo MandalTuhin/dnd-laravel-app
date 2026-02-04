@@ -43,16 +43,17 @@ export const NodeService = {
                 .filter((node) => node.id !== 'spacer')
                 .map((node) => {
                     const fieldId = node.dataField;
-                    const original = rawVardefs[fieldId] || node.metadata || {};
-
-                    // We want to construct the item exactly as requested.
-                    // The requested layout JSON has: dataField, editorType, label: { text },
-                    // and then other properties like source, summaryType (if added), etc.
-
-                    const { label, ...metadata } = original;
+                    const baseVardef = rawVardefs[fieldId] || {};
+                    // Merge: Metadata from the layout (preserving summaryType, etc)
+                    // takes precedence over base vardefs if they overlap,
+                    // but we ensure the current node's editorType is used.
+                    const combined = {
+                        ...baseVardef,
+                        ...(node.metadata || {}),
+                    };
 
                     // Ensure we don't nest the label text recursively (handle deep nesting)
-                    let labelText = label;
+                    let labelText = combined.label;
                     while (
                         labelText &&
                         typeof labelText === 'object' &&
@@ -63,9 +64,15 @@ export const NodeService = {
                     // Fallback to node.label if labelText is empty/undefined
                     labelText = labelText || node.label;
 
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { label, ...metadata } = combined;
+
                     return {
                         dataField: fieldId,
-                        editorType: original.editorType || 'dxTextBox',
+                        editorType:
+                            node.editorType ||
+                            combined.editorType ||
+                            'dxTextBox',
                         label: {
                             text: labelText,
                         },
