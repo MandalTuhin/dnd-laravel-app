@@ -127,9 +127,27 @@ export const useNodeStore = defineStore('nodeStore', {
                 name: group.name || 'Untitled Container',
                 numCol: group.colCount || 1,
                 nodes: (group.items || []).map((item: any) => {
-                    // Check if this is a spacer node (no dataField and label text is "[ || ]")
+                    // Helper to safely get label text, handling potential nesting bug from previous versions
+                    const getLabelText = (labelObj: any) => {
+                        if (!labelObj) return undefined;
+                        let text = labelObj.text;
+                        // Handle nested text object bug
+                        while (
+                            typeof text === 'object' &&
+                            text !== null &&
+                            'text' in text
+                        ) {
+                            text = text.text;
+                        }
+                        return text;
+                    };
+
+                    const labelText = getLabelText(item.label);
+
+                    // Check if this is a spacer node
                     const isSpacerNode =
-                        !item.dataField && item.label?.text === '[ || ]';
+                        item.dataField === 'spacer' ||
+                        (!item.dataField && labelText === '[ || ]');
 
                     if (isSpacerNode) {
                         return {
@@ -144,10 +162,7 @@ export const useNodeStore = defineStore('nodeStore', {
                     // Regular node
                     return {
                         id: crypto.randomUUID(), // Generate new ID for frontend
-                        label:
-                            item.label?.text ||
-                            item.dataField ||
-                            'Unknown Field',
+                        label: labelText || item.dataField || 'Unknown Field',
                         dataField: item.dataField,
                         editorType: item.editorType,
                         metadata: item,

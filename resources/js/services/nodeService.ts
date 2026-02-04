@@ -51,11 +51,23 @@ export const NodeService = {
 
                     const { label, ...metadata } = original;
 
+                    // Ensure we don't nest the label text recursively (handle deep nesting)
+                    let labelText = label;
+                    while (
+                        labelText &&
+                        typeof labelText === 'object' &&
+                        'text' in labelText
+                    ) {
+                        labelText = labelText.text;
+                    }
+                    // Fallback to node.label if labelText is empty/undefined
+                    labelText = labelText || node.label;
+
                     return {
                         dataField: fieldId,
                         editorType: original.editorType || 'dxTextBox',
                         label: {
-                            text: label || node.label,
+                            text: labelText,
                         },
                         ...metadata,
                     };
