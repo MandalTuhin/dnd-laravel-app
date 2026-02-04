@@ -80,29 +80,6 @@ class LayoutController extends Controller
     }
 
     /**
-     * List all saved layouts
-     */
-    public function index(): JsonResponse
-    {
-        $files = Storage::disk('local')->files('layouts');
-
-        $layouts = collect($files)->map(function ($file) {
-            return [
-                'filename' => basename($file),
-                'name' => str_replace(['.json', '_'], ['', ' '], basename($file, '.json')),
-                'path' => $file,
-                'size' => Storage::disk('local')->size($file),
-                'modified' => Storage::disk('local')->lastModified($file),
-                'created_at' => date('Y-m-d H:i:s', Storage::disk('local')->lastModified($file)),
-            ];
-        })->sortByDesc('modified')->values();
-
-        return response()->json([
-            'layouts' => $layouts,
-        ]);
-    }
-
-    /**
      * Get the latest (most recently modified) layout
      */
     public function latest(): JsonResponse
@@ -146,45 +123,6 @@ class LayoutController extends Controller
             return response()->json([
                 'layout' => null,
                 'error' => 'Failed to load latest layout: '.$e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function show(string $filename): JsonResponse
-    {
-        try {
-            $path = 'layouts/'.$filename;
-
-            if (! Storage::disk('local')->exists($path)) {
-                return response()->json([
-                    'error' => 'Layout not found',
-                ], 404);
-            }
-
-            $content = Storage::disk('local')->get($path);
-
-            if ($content === false) {
-                throw new Exception('Failed to read layout file');
-            }
-
-            $layout = json_decode($content, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Invalid JSON in layout file: '.json_last_error_msg());
-            }
-
-            return response()->json([
-                'filename' => $filename,
-                'layout' => $layout,
-            ]);
-        } catch (Exception $e) {
-            Log::error('Failed to load layout', [
-                'filename' => $filename,
-                'error' => $e->getMessage(),
-            ]);
-
-            return response()->json([
-                'error' => 'Failed to load layout: '.$e->getMessage(),
             ], 500);
         }
     }
