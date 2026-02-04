@@ -103,8 +103,53 @@ class LayoutController extends Controller
     }
 
     /**
-     * Get a specific layout
+     * Get the latest (most recently modified) layout
      */
+    public function latest(): JsonResponse
+    {
+        try {
+            $files = Storage::disk('local')->files('layouts');
+
+            if (empty($files)) {
+                return response()->json([
+                    'layout' => null,
+                    'message' => 'No saved layouts found',
+                ]);
+            }
+
+            // Get the most recent file directly without full metadata processing
+            $latestFile = collect($files)
+                ->sortByDesc(fn ($file) => Storage::disk('local')->lastModified($file))
+                ->first();
+
+            $content = Storage::disk('local')->get($latestFile);
+
+            if ($content === false) {
+                throw new Exception('Failed to read latest layout file');
+            }
+
+            $layout = json_decode($content, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON in latest layout file: '.json_last_error_msg());
+            }
+
+            return response()->json([
+                'filename' => basename($latestFile),
+                'layout' => $layout,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Failed to load latest layout', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'layout' => null,
+                'error' => 'Failed to load latest layout: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function show(string $filename): JsonResponse
     {
         try {

@@ -54,7 +54,7 @@ export const useNodeStore = defineStore('nodeStore', {
             this.loadError = null;
 
             try {
-                const response = await fetch('/api/layouts', {
+                const response = await fetch('/api/layouts/latest', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -68,10 +68,12 @@ export const useNodeStore = defineStore('nodeStore', {
 
                 const result = await response.json();
 
-                // Get the most recent layout (first in the sorted list)
-                if (result.layouts && result.layouts.length > 0) {
-                    const latestLayout = result.layouts[0];
-                    await this.loadSpecificLayout(latestLayout.filename);
+                if (result.layout) {
+                    // Convert server layout back to workspace containers
+                    this.workspaceContainers =
+                        this.convertServerLayoutToContainers(result.layout);
+                    // Update available nodes based on what's used in containers
+                    this.updateAvailableNodes();
                 } else {
                     // No saved layouts, start with empty workspace
                     this.workspaceContainers = [];
@@ -80,7 +82,10 @@ export const useNodeStore = defineStore('nodeStore', {
                     );
                 }
             } catch (error) {
-                console.error('Failed to load layouts from server:', error);
+                console.error(
+                    'Failed to load latest layout from server:',
+                    error,
+                );
                 this.loadError = 'Failed to load workspace from server';
                 // Fallback to empty workspace
                 this.workspaceContainers = [];
