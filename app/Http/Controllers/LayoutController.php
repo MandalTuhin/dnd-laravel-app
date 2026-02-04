@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -14,7 +15,7 @@ class LayoutController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        \Log::info('Layout store method called', ['request' => $request->all()]);
+        Log::info('Layout store method called', ['request' => $request->all()]);
 
         $request->validate([
             'layout' => 'required|array',
@@ -24,14 +25,14 @@ class LayoutController extends Controller
         $layout = $request->input('layout');
         $name = $request->input('name', 'layout_'.now()->format('Y-m-d_H-i-s'));
 
-        \Log::info('Processing layout', ['name' => $name, 'layout_count' => count($layout)]);
+        Log::info('Processing layout', ['name' => $name, 'layout_count' => count($layout)]);
 
         // Ensure the name is safe for filesystem
         $filename = Str::slug($name).'.json';
 
         // Create layouts directory if it doesn't exist
         if (! Storage::disk('local')->exists('layouts')) {
-            \Log::info('Creating layouts directory');
+            Log::info('Creating layouts directory');
             Storage::disk('local')->makeDirectory('layouts');
         }
 
@@ -39,11 +40,11 @@ class LayoutController extends Controller
         $path = 'layouts/'.$filename;
         $jsonContent = json_encode($layout, JSON_PRETTY_PRINT);
 
-        \Log::info('Saving file', ['path' => $path, 'content_length' => strlen($jsonContent)]);
+        Log::info('Saving file', ['path' => $path, 'content_length' => strlen($jsonContent)]);
 
         $result = Storage::disk('local')->put($path, $jsonContent);
 
-        \Log::info('File save result', ['result' => $result, 'full_path' => storage_path('app/'.$path)]);
+        Log::info('File save result', ['result' => $result, 'full_path' => storage_path('app/'.$path)]);
 
         return response()->json([
             'success' => true,

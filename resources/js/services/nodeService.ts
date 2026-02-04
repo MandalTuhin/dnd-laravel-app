@@ -53,7 +53,7 @@ export const NodeService = {
                     };
 
                     // Ensure we don't nest the label text recursively (handle deep nesting)
-                    let labelText = combined.label;
+                    let labelText: any = combined.label;
                     while (
                         labelText &&
                         typeof labelText === 'object' &&
