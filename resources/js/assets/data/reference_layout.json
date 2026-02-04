@@ -1,0 +1,184 @@
+[
+    {
+        "name": "Basic Information",
+        "itemType": "group",
+        "colCount": 2,
+        "items": [
+            {
+                "dataField": "name",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Name"
+                }
+            },
+            {
+                "dataField": "assigned_to",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Assigned To"
+                }
+            },
+            {
+                "dataField": "phone_number_1",
+                "editorType": "Phone",
+                "label": {
+                    "text": "Phone Number"
+                },
+                "summaryType": "count"
+            },
+            {
+                "dataField": "phone_number",
+                "editorType": "Integer",
+                "label": {
+                    "text": "Phone Number"
+                }
+            },
+            {
+                "dataField": "email",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Email"
+                },
+                "dataType": "string",
+                "summaryType": "count"
+            },
+            {
+                "dataField": "website",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Website"
+                }
+            },
+            {
+                "dataField": "account_type",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Account Type"
+                }
+            },
+            {
+                "dataField": "role_type",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Role Type"
+                },
+                "dataType": "string",
+                "summaryType": "count"
+            },
+            {
+                "dataField": "rlt_account_account",
+                "editorType": "Relate",
+                "label": {
+                    "text": "Account"
+                },
+                "dataType": "string",
+                "summaryType": "count"
+            }
+        ]
+    },
+    {
+        "name": "Business Information",
+        "itemType": "group",
+        "colCount": 2,
+        "items": [
+            {
+                "dataField": "entity_type",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Entity Type"
+                }
+            },
+            {
+                "dataField": "nature_of_business",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Nature Of Business"
+                }
+            },
+            {
+                "dataField": "industry",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Industry"
+                }
+            },
+            {
+                "dataField": "business_activity",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "Business Activity"
+                },
+                "dataType": "string",
+                "summaryType": "count"
+            },
+            {
+                "dataField": "primary_product",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Primary Product"
+                },
+                "dataType": "string",
+                "summaryType": "count"
+            },
+            {
+                "dataField": "compliance_type",
+                "editorType": "MultiSelect",
+                "label": {
+                    "text": "Compliance Type"
+                },
+                "summaryType": "count"
+            }
+        ]
+    },
+    {
+        "name": "Detailed Org Information",
+        "itemType": "group",
+        "colCount": 2,
+        "items": [
+            {
+                "dataField": "annual_revenue",
+                "editorType": "dxTextBox",
+                "label": {
+                    "text": "Annual Revenue"
+                }
+            },
+            {
+                "dataField": "no_of_employees",
+                "editorType": "dxSelectBox",
+                "label": {
+                    "text": "No Of Employees"
+                }
+            }
+        ]
+    },
+    {
+        "name": "Description",
+        "itemType": "group",
+        "colCount": 1,
+        "items": [
+            {
+                "dataField": "description",
+                "editorType": "dxTextArea",
+                "label": {
+                    "text": "Description"
+                }
+            }
+        ]
+    },
+    {
+        "name": "Test Line Item",
+        "itemType": "group",
+        "colCount": 1,
+        "items": [
+            {
+                "dataField": "InventoryDetail_LineItem",
+                "editorType": "LineItemField",
+                "label": {
+                    "text": "Test Line Item"
+                },
+                "source": "non-db",
+                "summaryType": "count"
+            }
+        ]
+    }
+]
